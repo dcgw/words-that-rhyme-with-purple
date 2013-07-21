@@ -100,6 +100,31 @@
         return document.getElementsByTagName('small')[0];
     }
 
+    function loadSound(name, loop) {
+        var audio = document.createElement("audio");
+        var source = document.createElement("source");
+        source.src = name + ".ogg";
+        audio.appendChild(source);
+        source = document.createElement("source");
+        source.src = name + ".mp3";
+        audio.appendChild(source);
+        audio.loop = !!loop;
+        return {
+            play: function () {
+                audio.play();
+            },
+            stop: function () {
+                audio.pause();
+            }
+        }
+    }
+
+    var titleMusic = loadSound("title-music", true);
+    var letsPlaySound = loadSound("lets-play", false);
+    var gameMusic = loadSound("game-music", false);
+
+    titleMusic.play();
+
     (function (game, title, smallPrint) {
         var playButton = document.createElement('button');
         playButton.style.position = "relative";
@@ -160,31 +185,6 @@
 
         onAnimationFrame();
     }(getTitle()));
-
-    function makeSound(name, loop) {
-        var audio = document.createElement("audio");
-        var source = document.createElement("source");
-        source.src = name + ".ogg";
-        audio.appendChild(source);
-        source = document.createElement("source");
-        source.src = name + ".mp3";
-        audio.appendChild(source);
-        audio.loop = !!loop;
-        return {
-            play: function () {
-                audio.play();
-            },
-            stop: function () {
-                audio.pause();
-            }
-        }
-    }
-
-    var titleMusic = makeSound("title-music", true);
-    var letsPlaySound = makeSound("lets-play", false);
-    var gameMusic = makeSound("game-music", false);
-
-    titleMusic.play();
 
     // Your earth-word ‘purple’ confuses and infuriates us!
     // Give us the rhymes that we demand, or be destroyed!
