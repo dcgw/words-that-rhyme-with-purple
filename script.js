@@ -1,15 +1,12 @@
 (function(){
-    document.addEventListener('load', onLoad, true);
-
-    function onLoad() {
-        addPlayButton();
-        animateTitle();
-    }
+    addPlayButton();
+    animateTitle();
 
     function addPlayButton() {
         var game = getGame();
         var title = getTitle();
         var button = document.createElement('button');
+        button.className="play-button";
         button.appendChild(document.createTextNode('Play Game'));
         game.insertBefore(button, title);
         game.insertBefore(title, button);
