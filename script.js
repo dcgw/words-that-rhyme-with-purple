@@ -31,6 +31,8 @@
                     smallPrint.style.display = "none";
                     button.style.display = "none";
                     clearInterval(interval);
+
+                    gameMusic.play();
                 }
             }, 16);
         }
@@ -73,6 +75,7 @@
 
     var titleMusic = makeSound("title-music", true);
     var letsPlaySound = makeSound("lets-play", false);
+    var gameMusic = makeSound("game-music", false);
 
     function getGame() {
         return document.getElementsByClassName('game')[0];
