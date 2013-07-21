@@ -1,7 +1,4 @@
 (function(){
-    addPlayButton();
-    animateTitle();
-
     function addPlayButton() {
         var game = getGame();
         var title = getTitle();
@@ -14,6 +11,9 @@
         game.insertBefore(button, smallPrint);
 
         function onClick() {
+            titleMusic.stop();
+            letsPlaySound.play();
+
             button.disabled = true;
             button.className = "play-button active";
 
@@ -52,6 +52,28 @@
         }, 16);
     }
 
+    function makeSound(name, loop) {
+        var audio = document.createElement("audio");
+        var source = document.createElement("source");
+        source.src = name + ".ogg";
+        audio.appendChild(source);
+        source = document.createElement("source");
+        source.src = name + ".mp3";
+        audio.appendChild(source);
+        audio.loop = !!loop;
+        return {
+            play: function() {
+                audio.play();
+            },
+            stop: function() {
+                audio.pause();
+            }
+        }
+    }
+
+    var titleMusic = makeSound("title-music", true);
+    var letsPlaySound = makeSound("lets-play", false);
+
     function getGame() {
         return document.getElementsByClassName('game')[0];
     }
@@ -63,6 +85,10 @@
     function getSmallPrint() {
         return document.getElementsByTagName('small')[0];
     }
+
+    addPlayButton();
+    animateTitle();
+    titleMusic.play();
 
     // Your earth-word ‘purple’ confuses and infuriates us!
     // Give us the rhymes that we demand, or be destroyed!
