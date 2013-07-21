@@ -5,11 +5,35 @@
     function addPlayButton() {
         var game = getGame();
         var title = getTitle();
+        var smallPrint = getSmallPrint();
         var button = document.createElement('button');
+        button.style.position = "relative";
+        button.addEventListener("click", onClick, true);
         button.className="play-button";
         button.appendChild(document.createTextNode('Play Game'));
-        game.insertBefore(button, title);
-        game.insertBefore(title, button);
+        game.insertBefore(button, smallPrint);
+
+        function onClick() {
+            button.disabled = true;
+            button.className = "play-button active";
+
+            var f = 0;
+            var interval = setInterval(function() {
+                button.style.top = Math.pow(2, f * 0.2) + 'px';
+                title.style.opacity = smallPrint.style.opacity = (1 - f/30).toString();
+
+                if (f == 10) {
+                    button.className = "play-button";
+                }
+
+                if (++f == 45) {
+                    title.style.display = "none";
+                    smallPrint.style.display = "none";
+                    button.style.display = "none";
+                    clearInterval(interval);
+                }
+            }, 16);
+        }
     }
 
     function animateTitle() {
@@ -34,6 +58,10 @@
 
     function getTitle() {
         return document.getElementsByTagName('h1')[0];
+    }
+
+    function getSmallPrint() {
+        return document.getElementsByTagName('small')[0];
     }
 
     // Your earth-word ‘purple’ confuses and infuriates us!
