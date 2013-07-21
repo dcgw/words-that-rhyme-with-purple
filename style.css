@@ -40,12 +40,6 @@ body {
     user-select: none;
 }
 
-.words-purple .background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
 .words-purple h1 {
     margin: 24px 96px;
     font-size: 64px;
