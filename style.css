@@ -146,3 +146,11 @@ body {
 .words-purple .word-entry>.bad-word {
     color: #ff3344;
 }
+
+.words-purple .score {
+    position: absolute;
+    display: block;
+    bottom: 48px;
+    left: 48px;
+    padding: 0 8px;
+}

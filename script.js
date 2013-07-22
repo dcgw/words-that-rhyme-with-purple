@@ -187,6 +187,7 @@
 
                         requestAnimationFrame(onAnimationFrame);
                     } else {
+                        score.end();
                         gameElement.style.display = "none";
                         titleScreen.start();
                     }
@@ -262,6 +263,7 @@
                             var wordSpan = document.createElement("span");
                             wordSpan.textContent = word + " ";
                             if (allowedWords[word]) {
+                                score.score(1);
                                 wordSpan.className = "good-word";
                                 wordEntry.insertBefore(wordSpan, input);
                             } else if (word.length > 0) {
@@ -320,6 +322,7 @@
             gameElement.style.display = "block";
             counter.start();
             wordEntry.start();
+            score.start();
             gameMusic.play();
         }
 
@@ -426,6 +429,38 @@
 
         return {
             start: start
+        };
+    }());
+
+    var score = (function() {
+        var currentScore = 0;
+        var highScore = 0;
+
+        var scoreElement = document.createElement("div");
+        scoreElement.className = "score";
+        mainElement.appendChild(scoreElement);
+
+        function start() {
+            currentScore = 0;
+            score(0);
+        }
+
+        function score(points) {
+            currentScore += points;
+            scoreElement.textContent = "Score: " + currentScore;
+            if (currentScore > highScore) {
+                highScore = currentScore;
+            }
+        }
+
+        function end() {
+            scoreElement.textContent = "High Score: " + highScore;
+        }
+
+        return {
+            start: start,
+            score: score,
+            end: end
         };
     }());
 
