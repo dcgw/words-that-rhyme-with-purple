@@ -20,6 +20,7 @@ summary, command, menu {
     font-size: 1em;
     line-height: inherit;
     color: inherit;
+    cursor: inherit;
 }
 
 
@@ -38,7 +39,12 @@ body {
     height: 600px;
     overflow: hidden;
     font: 32px/48px "Permanent Marker";
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
     user-select: none;
+    cursor: default;
 }
 
 .words-purple h1 {
