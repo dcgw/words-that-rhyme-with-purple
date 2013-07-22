@@ -172,9 +172,83 @@
             }, 1000/6)
         }());
 
-        var textarea = document.createElement("textarea");
-        textarea.className = "word-entry";
-        gameElement.appendChild(textarea);
+        var wordEntry = (function() {
+            var allowedWords = {
+                "curple": true,
+                "hirple": true
+            };
+
+            var wordEntry = document.createElement("div");
+            wordEntry.className = "word-entry";
+
+            var input = document.createElement("input");
+            wordEntry.appendChild(input);
+
+            function onInputChange(event) {
+                setTimeout(function () {
+                    if (event.key === "Enter" ||
+                            event.charCode === 0xa ||
+                            event.charCode === 0xd ||
+                            event.keyCode === 0xa ||
+                            event.keyCode === 0xd ||
+                            event.which === 0xa ||
+                            event.which === 0xd ||
+                            /\s/.test(input.value)) {
+                        var words = input.value.split(/\s+/);
+                        for (var i = 0; i < words.length; ++i) {
+                            var word = words[i].toLowerCase();
+                            var wordSpan = document.createElement("span");
+                            wordSpan.textContent = word + " ";
+                            if (allowedWords[word]) {
+                                wordSpan.className = "good-word";
+                                wordEntry.insertBefore(wordSpan, input);
+                            } else if (word.length > 0) {
+                                wordSpan.className = "bad-word";
+                                wordEntry.insertBefore(wordSpan, input);
+                            }
+                        }
+                        input.value = "";
+                    }
+                }, 0);
+            }
+
+            function onInputFocus() {
+                wordEntry.className = "word-entry focus";
+            }
+
+            function onInputBlur() {
+                wordEntry.className = "word-entry";
+            }
+
+            function onClick(event) {
+                if (event.target !== input) {
+                    input.focus();
+                    input.selectionStart = input.value.length;
+                    input.selectionEnd = input.value.length;
+                }
+            }
+
+            input.addEventListener("change", onInputChange, true);
+            input.addEventListener("keydown", onInputChange, true);
+            input.addEventListener("focus", onInputFocus, true);
+            input.addEventListener("blur", onInputBlur, true);
+            wordEntry.addEventListener("click", onClick, true);
+
+            gameElement.appendChild(wordEntry);
+
+            function start() {
+                while (wordEntry.firstChild !== input) {
+                    wordEntry.removeChild(wordEntry.firstChild);
+                }
+
+                input.value = "";
+                input.focus();
+            }
+
+            return {
+                start: start
+            };
+        }());
 
         mainElement.appendChild(gameElement);
 
@@ -183,7 +257,7 @@
         function start() {
             gameElement.style.display = "block";
             counter.start();
-            textarea.focus();
+            wordEntry.start();
             gameMusic.play();
         }
 

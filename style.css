@@ -115,12 +115,23 @@ body {
     top: 240px;
     left: 64px;
     right: 64px;
-    height: 48px;
-    outline: 0;
     border: 2px solid #1a001c;
     padding: 0 8px;
+    background: #fff;
 }
 
-.words-purple .word-entry:focus {
+.words-purple .word-entry.focus {
     box-shadow: 0 0 12px #cc33ff;
+}
+
+.words-purple .word-entry>input {
+    outline: 0;
+}
+
+.words-purple .word-entry>.good-word {
+    color: #33ff44;
+}
+
+.words-purple .word-entry>.bad-word {
+    color: #ff3344;
 }
