@@ -88,9 +88,15 @@
         }
     }());
 
-    function getGameElement() {
-        return document.getElementsByClassName('game')[0];
-    }
+    var mainElement = (function() {
+        var mainElement = document.getElementsByClassName('words-purple')[0];
+
+        while (mainElement.firstChild) {
+            mainElement.removeChild(mainElement.firstChild);
+        }
+
+        return mainElement;
+    }());
 
     function loadSound(name, loop) {
         var audio = document.createElement("audio");
@@ -112,20 +118,36 @@
         }
     }
 
-    var game = (function(gameElement) {
+    var game = (function() {
+        var gameElement = document.createElement("div");
+        gameElement.style.display = "none";
+        gameElement.style.width = "100%";
+        gameElement.style.height = "100%";
+
+        var textarea = document.createElement("textarea");
+        textarea.className = "word-entry";
+        gameElement.appendChild(textarea);
+
+        mainElement.appendChild(gameElement);
+
         var gameMusic = loadSound("game-music", false);
 
         function start() {
+            gameElement.style.display = "block";
+            textarea.focus();
             gameMusic.play();
         }
 
         return {
             start: start
         };
-    }(getGameElement()));
+    }());
 
-    var titleScreen = (function(gameElement) {
+    var titleScreen = (function() {
         var titleScreenElement = document.createElement("div");
+        titleScreenElement.style.display = "block";
+        titleScreenElement.style.width = "100%";
+        titleScreenElement.style.height = "100%";
 
         (function() {
             var titleElement = document.createElement("h1");
@@ -202,11 +224,7 @@
         small.appendChild(document.createTextNode("© 2013 Smartarse Industries"));
         titleScreenElement.appendChild(small);
 
-        while (gameElement.firstChild) {
-            gameElement.removeChild(gameElement.firstChild);
-        }
-
-        gameElement.appendChild(titleScreenElement);
+        mainElement.appendChild(titleScreenElement);
 
         var titleMusic = loadSound("title-music", true);
         var letsPlaySound = loadSound("lets-play", false);
@@ -224,7 +242,7 @@
         return {
             start: start
         };
-    }(getGameElement()));
+    }());
 
     titleScreen.start();
 
