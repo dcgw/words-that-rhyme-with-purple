@@ -124,6 +124,36 @@
         gameElement.style.width = "100%";
         gameElement.style.height = "100%";
 
+        var counter = (function() {
+            var counterElement = document.createElement("div");
+            counterElement.className = "counter";
+            gameElement.appendChild(counterElement);
+
+            function start() {
+                var startTime = time();
+
+                function onAnimationFrame() {
+                    var seconds = (time() - startTime) / 1000;
+
+                    if (seconds < 11) {
+                        counterElement.textContent = Math.ceil(10 - seconds).toString();
+                        counterElement.style.opacity = 1 - (seconds % 1);
+
+                        requestAnimationFrame(onAnimationFrame);
+                    } else {
+                        gameElement.style.display = "none";
+                        titleScreen.start();
+                    }
+                }
+
+                onAnimationFrame();
+            }
+
+            return {
+                start: start
+            };
+        }());
+
         var textarea = document.createElement("textarea");
         textarea.className = "word-entry";
         gameElement.appendChild(textarea);
@@ -134,6 +164,7 @@
 
         function start() {
             gameElement.style.display = "block";
+            counter.start();
             textarea.focus();
             gameMusic.play();
         }

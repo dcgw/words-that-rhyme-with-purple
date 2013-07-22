@@ -88,6 +88,19 @@ body {
     box-shadow: 0 0 0 #cc33ff, inset 0 2px 6px #000;
 }
 
+.words-purple .counter {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 800px;
+    line-height: 600px;
+    text-align: center;
+    color: #cc66ee;
+}
+
 .words-purple .word-entry {
     position: absolute;
     display: block;
