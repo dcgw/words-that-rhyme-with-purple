@@ -184,6 +184,22 @@
             var input = document.createElement("input");
             wordEntry.appendChild(input);
 
+            var startTime = time();
+            function onAnimationFrame() {
+                var f = (time() - startTime) / (1000 / 60);
+
+                var v = (Math.sin(f * 6 * Math.PI / 180) * 16 + 16);
+                var h = (Math.sin(1.2 + f * 5.5 * Math.PI / 180) * 16 + 24);
+                wordEntry.style.top = (240 - v) + 'px';
+                wordEntry.style.left = (64 - h) + 'px';
+                wordEntry.style.right = (64 - h) + 'px';
+                wordEntry.style.padding =  v + 'px ' + h + 'px';
+
+                requestAnimationFrame(onAnimationFrame);
+            }
+
+            onAnimationFrame();
+
             function onInputChange(event) {
                 setTimeout(function () {
                     if (event.key === "Enter" ||
