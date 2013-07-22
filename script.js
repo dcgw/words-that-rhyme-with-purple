@@ -121,10 +121,6 @@
     (function() {
         var background = document.createElement("div");
         background.className = "background";
-        background.style.position = "absolute";
-        background.style.display = "block";
-        background.style.width = "100%";
-        background.style.height = "100%";
 
         for (var i=0; i<40; ++i) {
             (function() {
@@ -166,9 +162,8 @@
 
     var game = (function() {
         var gameElement = document.createElement("div");
+        gameElement.className = "game";
         gameElement.style.display = "none";
-        gameElement.style.width = "100%";
-        gameElement.style.height = "100%";
 
         var counter = (function() {
             var counterElement = document.createElement("div");
@@ -333,9 +328,8 @@
 
     var titleScreen = (function() {
         var titleScreenElement = document.createElement("div");
+        titleScreenElement.className = "title-screen";
         titleScreenElement.style.display = "block";
-        titleScreenElement.style.width = "100%";
-        titleScreenElement.style.height = "100%";
 
         (function() {
             var titleElement = document.createElement("h1");
