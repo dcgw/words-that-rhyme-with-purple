@@ -154,6 +154,24 @@
             };
         }());
 
+        (function() {
+            var instruction = document.createElement("div");
+            instruction.className = "instruction";
+            instruction.appendChild(document.createTextNode("Write down as many words as you can that rhyme with ‘purple’!!!!!"));
+            gameElement.appendChild(instruction);
+
+            setInterval(function() {
+                instruction.style.paddingTop = (Math.random() * 32) + "px";
+                instruction.style.textIndent = (Math.random() * 128) + "px";
+                instruction.style.fontSize = (Math.random() * 16 - 8 + 32) + "px";
+                instruction.style.lineHeight = (Math.random() * 16 - 8 + 48) + "px";
+            }, 500);
+
+            setInterval(function() {
+                instruction.style.color = "hsl(" + (Math.random() * 80 + 245) + ",50%,40%)";
+            }, 1000/6)
+        }());
+
         var textarea = document.createElement("textarea");
         textarea.className = "word-entry";
         gameElement.appendChild(textarea);

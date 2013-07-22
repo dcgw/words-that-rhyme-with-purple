@@ -101,6 +101,14 @@ body {
     color: #cc66ee;
 }
 
+.words-purple .instruction {
+    position: absolute;
+    display: block;
+    top: 48px;
+    left: 64px;
+    right: 64px;
+}
+
 .words-purple .word-entry {
     position: absolute;
     display: block;
