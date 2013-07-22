@@ -88,16 +88,8 @@
         }
     }());
 
-    function getGame() {
+    function getGameElement() {
         return document.getElementsByClassName('game')[0];
-    }
-
-    function getTitle() {
-        return document.getElementsByTagName('h1')[0];
-    }
-
-    function getSmallPrint() {
-        return document.getElementsByTagName('small')[0];
     }
 
     function loadSound(name, loop) {
@@ -111,6 +103,7 @@
         audio.loop = !!loop;
         return {
             play: function () {
+                audio.load();
                 audio.play();
             },
             stop: function () {
@@ -119,72 +112,121 @@
         }
     }
 
-    var titleMusic = loadSound("title-music", true);
-    var letsPlaySound = loadSound("lets-play", false);
-    var gameMusic = loadSound("game-music", false);
+    var game = (function(gameElement) {
+        var gameMusic = loadSound("game-music", false);
 
-    titleMusic.play();
+        function start() {
+            gameMusic.play();
+        }
 
-    (function (game, title, smallPrint) {
-        var playButton = document.createElement('button');
-        playButton.style.position = "relative";
-        playButton.addEventListener("click", onClick, true);
-        playButton.className = "play-button";
-        playButton.appendChild(document.createTextNode('Play Game'));
-        game.insertBefore(playButton, smallPrint);
+        return {
+            start: start
+        };
+    }(getGameElement()));
 
-        function onClick() {
-            titleMusic.stop();
-            letsPlaySound.play();
+    var titleScreen = (function(gameElement) {
+        var titleScreenElement = document.createElement("div");
 
-            playButton.disabled = true;
-            playButton.className = "play-button active";
+        (function() {
+            var titleElement = document.createElement("h1");
+            titleElement.appendChild(document.createTextNode("Words that Rhyme\xa0 with ‘Purple’\xa0"));
+            titleScreenElement.appendChild(titleElement);
+
+            titleElement.style.position = 'relative';
 
             var startTime = time();
 
             function onAnimationFrame() {
                 var f = (time() - startTime) / (1000 / 60);
-
-                playButton.style.top = Math.pow(2, f * 0.2) + 'px';
-                title.style.opacity = smallPrint.style.opacity = (1 - f / 30).toString();
-
-                if (f >= 10) {
-                    playButton.className = "play-button";
-                }
-
-                if (++f < 45) {
-                    requestAnimationFrame(onAnimationFrame);
-                } else {
-                    title.style.display = "none";
-                    smallPrint.style.display = "none";
-                    playButton.style.display = "none";
-
-                    gameMusic.play();
-                }
+                titleElement.style.top = (Math.sin(f * 6 * Math.PI / 180) * 24) + 'px';
+                titleElement.style.lineHeight = (96 + Math.sin(3 + f * 5 * Math.PI / 180) * 6) + 'px';
+                var transform = 'scale(' + (1 + 0.1 * Math.sin(9 + f * 2 * Math.PI / 180)) + ')';
+                titleElement.style.webkitTransform = transform;
+                titleElement.style.mozTransform = transform;
+                titleElement.style.transform = transform;
+                requestAnimationFrame(onAnimationFrame);
             }
 
             onAnimationFrame();
+        }());
+
+        var playButton = (function () {
+            var playButton = document.createElement('button');
+            playButton.style.position = "relative";
+            playButton.className = "play-button";
+            playButton.appendChild(document.createTextNode('Play Game'));
+            titleScreenElement.appendChild(playButton);
+
+            function onClickPlay() {
+                titleMusic.stop();
+                letsPlaySound.play();
+
+                playButton.disabled = true;
+                playButton.className = "play-button active";
+
+                var startTime = time();
+
+                function onAnimationFrame() {
+                    var f = (time() - startTime) / (1000 / 60);
+
+                    playButton.style.top = Math.pow(2, f * 0.2) + 'px';
+                    titleScreenElement.style.opacity = (1 - f / 45).toString();
+
+                    if (f >= 10) {
+                        playButton.className = "play-button";
+                    }
+
+                    if (++f < 45) {
+                        requestAnimationFrame(onAnimationFrame);
+                    } else {
+                        titleScreenElement.style.display = "none";
+
+                        game.start();
+                    }
+                }
+
+                onAnimationFrame();
+            }
+
+            playButton.addEventListener("click", onClickPlay, true);
+
+            return {
+                start: function() {
+                    playButton.style.top = "0";
+                    playButton.disabled = false;
+                }
+            };
+        }());
+
+        var small = document.createElement("small");
+        small.appendChild(document.createTextNode("© 2013 Smartarse Industries"));
+        titleScreenElement.appendChild(small);
+
+        while (gameElement.firstChild) {
+            gameElement.removeChild(gameElement.firstChild);
         }
-    }(getGame(), getTitle(), getSmallPrint()));
 
-    (function (title) {
-        title.style.position = 'relative';
+        gameElement.appendChild(titleScreenElement);
 
-        var startTime = time();
+        var titleMusic = loadSound("title-music", true);
+        var letsPlaySound = loadSound("lets-play", false);
 
-        function onAnimationFrame() {
-            var f = (time() - startTime) / (1000 / 60);
-            title.style.top = (Math.sin(f * 6 * Math.PI / 180) * 24) + 'px';
-            title.style.lineHeight = (96 + Math.sin(3 + f * 5 * Math.PI / 180) * 6) + 'px';
-            var transform = 'scale(' + (1 + 0.1 * Math.sin(9 + f * 2 * Math.PI / 180)) + ')';
-            title.style.webkitTransform = transform;
-            title.style.mozTransform = transform;
-            title.style.transform = transform;
-            requestAnimationFrame(onAnimationFrame);
+        function start() {
+            titleMusic.play();
+
+            titleScreenElement.style.display = "block";
+            titleScreenElement.style.opacity = "1";
+            playButton.start();
         }
 
-        onAnimationFrame();
-    }(getTitle()));
+        start();
+
+        return {
+            start: start
+        };
+    }(getGameElement()));
+
+    titleScreen.start();
 
     // Your earth-word ‘purple’ confuses and infuriates us!
     // Give us the rhymes that we demand, or be destroyed!
