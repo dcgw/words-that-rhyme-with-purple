@@ -118,6 +118,7 @@ body {
     border: 2px solid #1a001c;
     padding: 0 8px;
     background: #fff;
+    cursor: text;
 }
 
 .words-purple .word-entry.focus {
