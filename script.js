@@ -118,6 +118,52 @@
         }
     }
 
+    (function() {
+        var background = document.createElement("div");
+        background.className = "background";
+        background.style.position = "absolute";
+        background.style.display = "block";
+        background.style.width = "100%";
+        background.style.height = "100%";
+
+        for (var i=0; i<40; ++i) {
+            (function() {
+                var square = document.createElement("div");
+                square.style.position = "absolute";
+                var startTime, size, speed;
+
+                function start() {
+                    startTime = time();
+                    size = Math.random() * 256 + 16;
+                    speed = Math.random() * 15 + 1;
+                    square.style.top = Math.random() * (600 + size + size) - size + "px";
+                    square.style.width = size + "px";
+                    square.style.height = size + "px";
+                    square.style.opacity = Math.random() * 0.1;
+                    onAnimationFrame();
+                }
+
+                function onAnimationFrame() {
+                    var f = (time() - startTime) / (1000 / 60);
+                    var left = 800 - speed * f;
+                    square.style.left = left + "px";
+
+                    if (left <= -size) {
+                        start();
+                    } else {
+                        requestAnimationFrame(onAnimationFrame);
+                    }
+                }
+
+                start();
+
+                background.appendChild(square);
+            }());
+        }
+
+        mainElement.appendChild(background);
+    }());
+
     var game = (function() {
         var gameElement = document.createElement("div");
         gameElement.style.display = "none";
