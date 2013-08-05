@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Words That Rhyme With Purple" default="build">
+    <taskdef resource="tasks.properties" loaderref="jetty.loader">
+        <classpath>
+            <fileset dir="lib/jetty" includes="**/*.jar"/>
+        </classpath>
+    </taskdef>
+
+    <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy">
+        <classpath>
+            <fileset dir="lib/groovy" includes="**.*.jar"/>
+        </classpath>
+    </taskdef>
+
+    <property name="port" value="8080"/>
+
+    <target name="build.resources">
+        <mkdir dir="build"/>
+
+        <sync todir="build">
+            <fileset dir="resources"/>
+        </sync>
+    </target>
+
+    <target name="build.cache-manifest" depends="build.resources">
+        <groovy>
+            def buildDir = new File("build")
+            def buildDirUri = buildDir.toURI()
+            def resources = buildDir.listFiles().sort().findAll { !(it =~ /\.map$/) }
+            new File("build/manifest.appcache").withWriter { writer ->
+                writer.writeLine("CACHE MANIFEST")
+                resources.each { resource ->
+                    def sha1 = java.security.MessageDigest.getInstance("SHA1")
+                    def digest = sha1.digest(resource.getBytes())
+                    writer.write("#")
+                    writer.writeLine(new BigInteger(1, digest).toString(16).padLeft(40, "0"))
+                    def filePath = buildDirUri.relativize(resource.toURI()).getPath()
+                    if (filePath == "index.html") {
+                        writer.writeLine(".")
+                    } else {
+                        writer.writeLine(filePath)
+                    }
+                }
+            }
+        </groovy>
+    </target>
+
+    <target name="build" depends="build.resources, build.cache-manifest"/>
+
+    <target name="run" depends="build">
+        <jetty.run jettyport="${port}" daemon="true">
+            <webapp resourcebase="build"/>
+        </jetty.run>
+
+        <echo message="Browse to http://localhost:${port}/"/>
+        <input message="Press ENTER to stop."/>
+    </target>
+</project>
