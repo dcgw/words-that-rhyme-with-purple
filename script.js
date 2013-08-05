@@ -167,32 +167,45 @@
 
         var counter = (function() {
             var counterElement = document.createElement("div");
+            var won = false;
             counterElement.className = "counter";
             gameElement.appendChild(counterElement);
 
             function start() {
                 var startTime = time();
+                var signalledTimeUp = false;
+                won = false;
 
                 function onAnimationFrame() {
-                    var seconds = (time() - startTime) / 1000;
+                    if (!won) {
+                        var seconds = (time() - startTime) / 1000;
 
-                    if (seconds < 11) {
-                        counterElement.textContent = Math.ceil(10 - seconds).toString();
-                        counterElement.style.opacity = 1 - (seconds % 1);
+                        if (seconds < 11) {
+                            counterElement.textContent = Math.ceil(10 - seconds).toString();
+                            counterElement.style.opacity = 1 - (seconds % 1);
 
-                        requestAnimationFrame(onAnimationFrame);
-                    } else {
-                        score.end();
-                        gameElement.style.display = "none";
-                        titleScreen.start();
+                            requestAnimationFrame(onAnimationFrame);
+                        } else {
+                            end();
+                        }
+
+                        if (seconds >= 10 && !signalledTimeUp) {
+                            signalledTimeUp = true;
+                            lose();
+                        }
                     }
                 }
 
                 onAnimationFrame();
             }
 
+            function win() {
+                won = true;
+            }
+
             return {
-                start: start
+                start: start,
+                win: win
             };
         }());
 
@@ -219,6 +232,9 @@
                 "curple": true,
                 "hirple": true
             };
+
+            var goodWordCount = 0;
+            var allowedWordCount = 2;
 
             var wordEntry = document.createElement("div");
             wordEntry.className = "word-entry";
@@ -261,6 +277,10 @@
                                 score.score(1);
                                 wordSpan.className = "good-word";
                                 wordEntry.insertBefore(wordSpan, input);
+
+                                if (++goodWordCount == allowedWordCount) {
+                                    win();
+                                }
                             } else if (word.length > 0) {
                                 wordSpan.className = "bad-word";
                                 wordEntry.insertBefore(wordSpan, input);
@@ -300,12 +320,19 @@
                     wordEntry.removeChild(wordEntry.firstChild);
                 }
 
+                goodWordCount = 0;
+
                 input.value = "";
                 input.focus();
             }
 
+            function end() {
+                // TODO
+            }
+
             return {
-                start: start
+                start: start,
+                end: end
             };
         }());
 
@@ -319,6 +346,22 @@
             wordEntry.start();
             score.start();
             gameMusic.play();
+        }
+
+        function end() {
+            wordEntry.end();
+            score.end();
+            gameElement.style.display = "none";
+            titleScreen.start();
+        }
+
+        function win() {
+            counter.win();
+            // TODO
+        }
+
+        function lose() {
+            // TODO
         }
 
         return {
