@@ -197,7 +197,7 @@
 
                         if (seconds >= 10 && !signalledTimeUp) {
                             signalledTimeUp = true;
-                            lose();
+                            timeUp();
                         }
                     }
                 }
@@ -271,6 +271,28 @@
 
             onAnimationFrame();
 
+            function checkInput() {
+                var words = input.value.split(/\s+/);
+                for (var i = 0; i < words.length; ++i) {
+                    var word = words[i].toLowerCase();
+                    var wordSpan = document.createElement("span");
+                    wordSpan.textContent = word + " ";
+                    if (allowedWords[word]) {
+                        score.score(1);
+                        wordSpan.className = "good-word";
+                        wordEntry.insertBefore(wordSpan, input);
+
+                        if (++goodWordCount == allowedWordCount) {
+                            win();
+                        }
+                    } else if (word.length > 0) {
+                        wordSpan.className = "bad-word";
+                        wordEntry.insertBefore(wordSpan, input);
+                    }
+                }
+                input.value = "";
+            }
+
             function onInputChange(event) {
                 setTimeout(function () {
                     if (event.key === "Enter" ||
@@ -281,25 +303,7 @@
                             event.which === 0xa ||
                             event.which === 0xd ||
                             /\s/.test(input.value)) {
-                        var words = input.value.split(/\s+/);
-                        for (var i = 0; i < words.length; ++i) {
-                            var word = words[i].toLowerCase();
-                            var wordSpan = document.createElement("span");
-                            wordSpan.textContent = word + " ";
-                            if (allowedWords[word]) {
-                                score.score(1);
-                                wordSpan.className = "good-word";
-                                wordEntry.insertBefore(wordSpan, input);
-
-                                if (++goodWordCount == allowedWordCount) {
-                                    win();
-                                }
-                            } else if (word.length > 0) {
-                                wordSpan.className = "bad-word";
-                                wordEntry.insertBefore(wordSpan, input);
-                            }
-                        }
-                        input.value = "";
+                        checkInput();
                     }
                 }, 0);
             }
@@ -343,14 +347,20 @@
                 lostTime = -1;
             }
 
-            function lose() {
-                wordEntry.removeChild(input);
-                lostTime = time();
+            function timeUp() {
+                checkInput();
+
+                if (goodWordCount < allowedWordCount) {
+                    wordEntry.removeChild(input);
+                    lostTime = time();
+
+                    lose();
+                }
             }
 
             return {
                 start: start,
-                lose: lose
+                timeUp: timeUp
             };
         }());
 
@@ -378,8 +388,11 @@
         }
 
         function lose() {
-            wordEntry.lose();
             // TODO
+        }
+
+        function timeUp() {
+            wordEntry.timeUp();
         }
 
         return {
