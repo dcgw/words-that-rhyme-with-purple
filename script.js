@@ -283,6 +283,7 @@
                         wordEntry.insertBefore(wordSpan, input);
 
                         if (++goodWordCount == allowedWordCount) {
+                            wordEntry.removeChild(input);
                             win();
                         }
                     } else if (word.length > 0) {
