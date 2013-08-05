@@ -9,7 +9,7 @@
         document.body.appendChild(scriptElement);
     }
 
-    if (applicationCache) {
+    if (window.applicationCache) {
         function onProgress(event) {
             loadingElement.textContent = "Loading... " + event.loaded.toString() + "/" + event.total.toString();
         }
