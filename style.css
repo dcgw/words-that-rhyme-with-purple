@@ -159,6 +159,10 @@ body {
     color: #ff3344;
 }
 
+.words-purple .word-entry>.bad-word.flash {
+    color: #871c25;
+}
+
 .words-purple .score {
     position: absolute;
     display: block;

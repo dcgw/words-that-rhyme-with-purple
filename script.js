@@ -294,6 +294,21 @@
                         badWordSound.play();
                         wordSpan.className = "bad-word";
                         wordEntry.insertBefore(wordSpan, input);
+
+                        (function (wordSpan) {
+                            var flashCount = 0;
+
+                            var interval = setInterval(function () {
+                                if (++flashCount >= 8) {
+                                    wordSpan.className = "bad-word";
+                                    clearInterval(interval);
+                                } else if (flashCount % 2 == 0) {
+                                    wordSpan.className = "bad-word";
+                                } else {
+                                    wordSpan.className = "bad-word flash";
+                                }
+                            }, 50);
+                        }(wordSpan));
                     }
                 }
                 input.value = "";
