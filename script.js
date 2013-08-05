@@ -271,6 +271,8 @@
 
             onAnimationFrame();
 
+            var goodWordSound = loadSound("good-word", false);
+
             function checkInput() {
                 var words = input.value.split(/\s+/);
                 for (var i = 0; i < words.length; ++i) {
@@ -279,6 +281,7 @@
                     wordSpan.textContent = word + " ";
                     if (allowedWords[word]) {
                         score.score(1);
+                        goodWordSound.play();
                         wordSpan.className = "good-word";
                         wordEntry.insertBefore(wordSpan, input);
 
