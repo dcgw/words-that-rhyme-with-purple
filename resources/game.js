@@ -421,7 +421,7 @@
             }
 
             function animate() {
-                winLoseElement.style.display = null;
+                winLoseElement.style.display = "block";
 
                 var startTime = time();
                 function onAnimationFrame() {
