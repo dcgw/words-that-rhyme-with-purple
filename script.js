@@ -383,7 +383,11 @@
             titleScreen.start();
         }
 
+        var winSound = loadSound("winner", false);
+
         function win() {
+            gameMusic.stop();
+            winSound.play();
             counter.win();
             // TODO
         }
