@@ -272,6 +272,7 @@
             onAnimationFrame();
 
             var goodWordSound = loadSound("good-word", false);
+            var badWordSound = loadSound("bad-word", false);
 
             function checkInput() {
                 var words = input.value.split(/\s+/);
@@ -290,6 +291,7 @@
                             win();
                         }
                     } else if (word.length > 0) {
+                        badWordSound.play();
                         wordSpan.className = "bad-word";
                         wordEntry.insertBefore(wordSpan, input);
                     }
