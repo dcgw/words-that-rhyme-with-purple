@@ -11,7 +11,9 @@
 
     if (window.applicationCache) {
         function onProgress(event) {
-            loadingElement.textContent = "Loading... " + event.loaded.toString() + "/" + event.total.toString();
+            if (typeof event.loaded === "number" && typeof event.total === "number") {
+                loadingElement.textContent = "Loading... " + event.loaded.toString() + "/" + event.total.toString();
+            }
         }
 
         function onUpdateReady() {
