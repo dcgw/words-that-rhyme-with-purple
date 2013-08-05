@@ -279,6 +279,7 @@
                 for (var i = 0; i < words.length; ++i) {
                     var word = words[i].toLowerCase();
                     var wordSpan = document.createElement("span");
+                    wordSpan.style.position = "relative";
                     wordSpan.textContent = word + " ";
                     if (allowedWords[word]) {
                         score.score(1);
@@ -290,6 +291,33 @@
                             wordEntry.removeChild(input);
                             win();
                         }
+
+                        (function (wordSpan) {
+                            var wordEffectSpan = document.createElement("span");
+                            wordEffectSpan.textContent = wordSpan.textContent;
+                            wordEffectSpan.style.position = "absolute";
+                            wordEffectSpan.style.top = "0";
+                            wordEffectSpan.style.left = "0";
+                            wordSpan.appendChild(wordEffectSpan);
+
+                            var startTime = time();
+                            function onAnimationFrame() {
+                                var f = (time() - startTime) / (1000 / 60);
+                                var transform = "scale(" + (1 + f/4) + ")";
+                                wordEffectSpan.style.webkitTransform = transform;
+                                wordEffectSpan.style.mozTransform = transform;
+                                wordEffectSpan.style.transform = transform;
+                                wordEffectSpan.style.opacity = 1 - (f / 30);
+
+                                if (f < 30) {
+                                    requestAnimationFrame(onAnimationFrame);
+                                } else {
+                                    wordSpan.removeChild(wordEffectSpan);
+                                }
+                            }
+
+                            onAnimationFrame();
+                        }(wordSpan));
                     } else if (word.length > 0) {
                         badWordSound.play();
                         wordSpan.className = "bad-word";
