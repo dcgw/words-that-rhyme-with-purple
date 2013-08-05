@@ -191,8 +191,6 @@
                             counterElement.style.opacity = 1 - (seconds % 1);
 
                             requestAnimationFrame(onAnimationFrame);
-                        } else {
-                            end();
                         }
 
                         if (seconds >= 10 && !signalledTimeUp) {
@@ -413,6 +411,56 @@
             };
         }());
 
+        var winLoseText = (function () {
+            var winLoseElement = document.createElement("div");
+            winLoseElement.style.display = "none";
+            gameElement.appendChild(winLoseElement);
+
+            function start() {
+                winLoseElement.style.display = "none";
+            }
+
+            function animate() {
+                winLoseElement.style.display = null;
+
+                var startTime = time();
+                function onAnimationFrame() {
+                    var f = (time() - startTime) / (1000 / 60);
+                    winLoseElement.style.opacity = 1 - (f / 60);
+                    var transform = "scale(" + (1 + f / 60) + ")";
+                    winLoseElement.style.webkitTransform = transform;
+                    winLoseElement.style.mozTransform = transform;
+                    winLoseElement.style.transform = transform;
+
+                    if (f < 60) {
+                        requestAnimationFrame(onAnimationFrame);
+                    } else {
+                        end();
+                    }
+                }
+
+                onAnimationFrame();
+            }
+
+            function win() {
+                winLoseElement.textContent = "Winner!";
+                winLoseElement.className = "winner";
+                animate();
+            }
+
+            function lose() {
+                winLoseElement.textContent = "Loser!";
+                winLoseElement.className = "loser";
+                animate();
+            }
+
+            return {
+                start: start,
+                win: win,
+                lose: lose
+            };
+        }());
+
         mainElement.appendChild(gameElement);
 
         var gameMusic = loadSound("game-music", false);
@@ -422,6 +470,7 @@
             counter.start();
             wordEntry.start();
             score.start();
+            winLoseText.start();
             gameMusic.play();
         }
 
@@ -437,11 +486,14 @@
             gameMusic.stop();
             winSound.play();
             counter.win();
-            // TODO
+            winLoseText.win();
         }
 
+        var loseSound = loadSound("loser", false)
+
         function lose() {
-            // TODO
+            loseSound.play();
+            winLoseText.lose();
         }
 
         function timeUp() {

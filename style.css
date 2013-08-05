@@ -170,3 +170,26 @@ body {
     left: 48px;
     padding: 0 8px;
 }
+
+.words-purple .winner,
+.words-purple .loser {
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 192px;
+    font-size: 96px;
+    line-height: 96px;
+    text-align: center;
+}
+
+.words-purple .winner {
+    color: #33ff44;
+    text-shadow: -2px -2px #051a06, 0 -2px #051a06, 2px -2px #051a06, 2px 0 #051a06,
+            2px 2px #051a06, 0 2px #051a06, -2px 2px #051a06, -2px 0 #051a06;
+}
+
+.words-purple .loser {
+    color: #ff3344;
+    text-shadow: -2px -2px #1a0507, 0 -2px #1a0507, 2px -2px #1a0507, 2px 0 #1a0507,
+            2px 2px #1a0507, 0 2px #1a0507, -2px 2px #1a0507, -2px 0 #1a0507;
+}
