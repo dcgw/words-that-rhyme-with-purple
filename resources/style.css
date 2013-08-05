@@ -1,6 +1,10 @@
 /* Web fonts */
-@import url(http://fonts.googleapis.com/css?family=Permanent+Marker);
-
+@font-face {
+    font-family: 'Permanent Marker';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Permanent Marker'), local('PermanentMarker'), url('permanent-marker.woff') format('woff');
+}
 
 /* Reset */
 html, body, section, nav, article, aside, h1, h2, h3, h4, h5, h6, hgroup,
