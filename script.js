@@ -95,6 +95,12 @@
             mainElement.removeChild(mainElement.firstChild);
         }
 
+        mainElement.addEventListener("scroll", function(event) {
+            event.target.scrollTop = 0;
+            event.target.scrollLeft = 0;
+            return false;
+        }, true);
+
         return mainElement;
     }());
 
@@ -240,15 +246,22 @@
             wordEntry.className = "word-entry";
 
             var input = document.createElement("input");
-            wordEntry.appendChild(input);
 
             var startTime = time();
+            var lostTime = -1;
             function onAnimationFrame() {
-                var f = (time() - startTime) / (1000 / 60);
+                var t = time();
+                var f = (t - startTime) / (1000 / 60);
+
+                var top = 0;
+                if (lostTime >= 0) {
+                    var lostF = (t - lostTime) / (1000 / 60);
+                    top = Math.pow(2, lostF * 0.2);
+                }
 
                 var v = (Math.sin(f * 6 * Math.PI / 180) * 16 + 16);
                 var h = (Math.sin(1.2 + f * 5.5 * Math.PI / 180) * 16 + 24);
-                wordEntry.style.top = (240 - v) + 'px';
+                wordEntry.style.top = (240 - v + top) + 'px';
                 wordEntry.style.left = (64 - h) + 'px';
                 wordEntry.style.right = (64 - h) + 'px';
                 wordEntry.style.padding =  v + 'px ' + h + 'px';
@@ -316,23 +329,28 @@
             gameElement.appendChild(wordEntry);
 
             function start() {
-                while (wordEntry.firstChild !== input) {
+                while (wordEntry.firstChild) {
                     wordEntry.removeChild(wordEntry.firstChild);
                 }
 
                 goodWordCount = 0;
 
+                wordEntry.appendChild(input);
                 input.value = "";
+                input.disabled = false;
                 input.focus();
+
+                lostTime = -1;
             }
 
-            function end() {
-                // TODO
+            function lose() {
+                wordEntry.removeChild(input);
+                lostTime = time();
             }
 
             return {
                 start: start,
-                end: end
+                lose: lose
             };
         }());
 
@@ -349,7 +367,6 @@
         }
 
         function end() {
-            wordEntry.end();
             score.end();
             gameElement.style.display = "none";
             titleScreen.start();
@@ -361,6 +378,7 @@
         }
 
         function lose() {
+            wordEntry.lose();
             // TODO
         }
 
