@@ -10,8 +10,8 @@
     }
 
     if (window.applicationCache &&
-        // Fuck Firefox in the eye.
-        !/mozilla(?!.*webkit).*\Wgecko\W/i.test(window.navigator && navigator.userAgent || "")) {
+            // Fuck Firefox in the eye.
+            !/mozilla(?!.*webkit).*\Wgecko\W/i.test(window.navigator && navigator.userAgent || "")) {
         function onProgress(event) {
             if (typeof event.loaded === "number" && typeof event.total === "number") {
                 loadingElement.textContent = "Loading... " + event.loaded.toString() + "/" + event.total.toString();
